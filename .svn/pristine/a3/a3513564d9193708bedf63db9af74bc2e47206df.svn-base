@@ -1,0 +1,261 @@
+/*
+ * TCSS 305
+ * Assignment 5 ¨C PowerPaint
+ */
+
+package gui;
+
+import actions.CanvasListener;
+import actions.ToolAction;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.swing.Action;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JColorChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JSlider;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import tools.EllipseTool;
+import tools.LineTool;
+import tools.PencilTool;
+import tools.RectangleTool;
+
+
+/**
+ * This is a class used to create a graphic user interface for this program.
+ * 
+ * @author Qing Bai
+ * @version 15 February 2015
+ */
+public final class PowerPaintGUI extends JFrame {
+    
+    /**
+     * This is the menu bar of this program.
+     */
+    private final JMenuBar myMenuBar;
+    
+    /**
+     * This is the canvas of this program.
+     */
+    private final PowerPaintCanvas myCanvas;
+    
+    /**
+     * This is a collections that stores all actions for the drawing tools.
+     */
+    private List<Action> myToolActions;
+
+    /**
+     * This is a constructor of this class.
+     */
+    public PowerPaintGUI() {
+        super("TCSS 305 PowerPaint");
+        setIconImage(new ImageIcon("images/w.gif").getImage());
+        myMenuBar = new JMenuBar();
+        myCanvas = new PowerPaintCanvas();
+        setUpToolActions();
+    }
+    
+    /**
+     * This is used to set up all components shown on this graphic user interface.
+     */
+    public void start() {
+        setJMenuBar(myMenuBar);
+        myMenuBar.add(createFileMenu());
+        myMenuBar.add(createOptionsMenu());
+        myMenuBar.add(createToolsMenu());
+        myMenuBar.add(createHelpMenu());
+        myMenuBar.add(createColorMenu());
+        
+        final CanvasListener listener = new CanvasListener(myCanvas, myMenuBar);
+        myCanvas.addMouseListener(listener);
+        myCanvas.addMouseMotionListener(listener);
+        
+        add(myCanvas, BorderLayout.CENTER);
+        add(createToolBar(), BorderLayout.SOUTH);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationByPlatform(true);
+        pack();
+        setVisible(true);
+    }
+    
+    /**
+     * This sets up all actions for the drawing tools in this program.
+     */
+    private void setUpToolActions() {
+        myToolActions = new LinkedList<Action>();
+        myToolActions.add(new ToolAction(myCanvas, new PencilTool(), "Pencil"));
+        myToolActions.add(new ToolAction(myCanvas, new LineTool(), "Line"));
+        myToolActions.add(new ToolAction(myCanvas, new RectangleTool(), "Rectangle"));
+        myToolActions.add(new ToolAction(myCanvas, new EllipseTool(), "Ellipse"));
+    }
+    
+    
+    /**
+     * This creates a file menu.
+     * 
+     * @return reference of a JMenu created
+     */
+    private JMenu createFileMenu() {
+        final JMenu file = new JMenu("File");
+        file.setMnemonic(KeyEvent.VK_F);
+        
+        final JMenuItem undoChanges = new JMenuItem("Undo all changes", KeyEvent.VK_U);
+        // enabled when the canvas isn't empty
+        undoChanges.setEnabled(false);
+        undoChanges.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent theEvent) {
+                myCanvas.clearCanvas();
+                myCanvas.repaint();
+                undoChanges.setEnabled(false);
+            }
+        });
+        
+        final JMenuItem exit = new JMenuItem("Exit", KeyEvent.VK_X);
+        exit.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent theEvent) {
+                dispose();
+            }
+        });
+        
+        file.add(undoChanges);
+        file.addSeparator();
+        file.add(exit);
+        return file;
+    }
+    
+    /**
+     * This creates a options menu.
+     * 
+     * @return reference of a JMenu created
+     */
+    private JMenu createOptionsMenu() {
+        final JMenu options = new JMenu("Options");
+        options.setMnemonic(KeyEvent.VK_O);
+        
+        final JMenuItem checkBox = new JCheckBoxMenuItem("Grid");
+        checkBox.setMnemonic(KeyEvent.VK_G);
+        checkBox.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent theEvent) {
+                myCanvas.setGridsVisible(checkBox.isSelected());
+                myCanvas.repaint();
+            }
+        });
+        
+        final JMenu submenu = new JMenu("Thickness");
+        submenu.setMnemonic(KeyEvent.VK_T);
+        final JSlider slider = new JSlider(0, 20, 1);
+        slider.setMajorTickSpacing(5);
+        slider.setMinorTickSpacing(1);
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
+        slider.setSnapToTicks(true);
+        slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(final ChangeEvent theEvent) {
+                myCanvas.setCurrentLineWidth(slider.getValue());
+            }
+        });
+        submenu.add(slider);
+        
+        options.add(checkBox);
+        options.add(submenu);
+        return options;
+    }
+    
+    /**
+     * This creates a tools menu.
+     * 
+     * @return reference of a JMenu created
+     */
+    private JMenu createToolsMenu() {
+        final JMenu tools = new JMenu("Tools");
+        tools.setMnemonic(KeyEvent.VK_T);
+        final ButtonGroup buttonGroup = new ButtonGroup();
+        
+        for (int i = 0; i < myToolActions.size(); i++) {
+            final JMenuItem item = new JRadioButtonMenuItem(myToolActions.get(i));
+            if (i == 0) {
+                item.setSelected(true);
+            }
+            buttonGroup.add(item);
+            tools.add(item);
+        }
+
+        return tools;
+    }
+    
+    /**
+     * This creates a help menu.
+     * 
+     * @return reference of a JMenu created
+     */
+    private JMenu createHelpMenu() {
+        final JMenu help = new JMenu("Help");
+        help.setMnemonic(KeyEvent.VK_H);
+        
+        final JMenuItem about = new JMenuItem("About...", KeyEvent.VK_A);
+        about.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent theEvent) {
+                JOptionPane.showMessageDialog(null, "TCSS 305 PowerPaint Winter 2015", "About",
+                                              JOptionPane.INFORMATION_MESSAGE, 
+                                              new ImageIcon("images/w.png"));
+            }
+        });
+        
+        help.add(about);
+        return help;
+    }
+    
+    /**
+     * This creates a color menu.
+     * 
+     * @return reference of a JMenu created
+     */
+    private JMenuItem createColorMenu() {
+        final JMenuItem color = new JMenu("Color...");
+        color.setMnemonic(KeyEvent.VK_C);
+        
+        color.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent theEvent) {
+                JColorChooser.showDialog(null, "Select a color", Color.BLACK);
+            }
+        });
+        
+        return color;
+    }
+    
+    /**
+     * This creates a tool bar for the drawing tools.
+     * 
+     * @return reference of a tool bar created
+     */
+    private JToolBar createToolBar() {
+        final JToolBar toolBar = new JToolBar();
+        final ButtonGroup buttonGroup = new ButtonGroup();
+        
+        for (final Action action : myToolActions) {
+            final JToggleButton toolButton = new JToggleButton(action);
+            buttonGroup.add(toolButton);
+            toolBar.add(toolButton);
+        }
+
+        return toolBar;
+    }
+}

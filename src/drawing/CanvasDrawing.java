@@ -1,0 +1,73 @@
+/*
+ * TCSS 305
+ * Assignment 5 ¨C PowerPaint
+ */
+
+package drawing;
+
+import java.awt.Color;
+import java.awt.Shape;
+
+/**
+ * This class is used to represent a drawing on the canvas.
+ * 
+ * @author Qing Bai
+ * @version 21 February 2015
+ */
+public final class CanvasDrawing {
+    
+    /**
+     * This is line width of this drawing.
+     */
+    private final int myLineWidth;
+    
+    /**
+     * This is color of this drawing.
+     */
+    private final Color myColor;
+    
+    /**
+     * This is the shape of this drawing.
+     */
+    private final Shape myShape;
+
+    /**
+     * This is a constructor used to create a drawing with given shape, color, and line width.
+     * 
+     * @param theShape is the shape of this drawing
+     * @param theColor is the color of this drawing
+     * @param theLineWidth is the line width of this drawing
+     */
+    public CanvasDrawing(final Shape theShape, final Color theColor, final int theLineWidth) {
+        myShape = theShape;
+        myColor = theColor;
+        myLineWidth = theLineWidth;
+    }
+    
+    /**
+     * Returns line width of this drawing.
+     * 
+     * @return line width of this drawing.
+     */
+    public int getLineWidth() {
+        return myLineWidth;
+    }
+    
+    /**
+     * Returns color of this drawing.
+     * 
+     * @return color of this drawing
+     */
+    public Color getColor() {
+        return myColor;
+    }
+    
+    /**
+     * Returns shape of this drawing.
+     * 
+     * @return shape of this drawing.
+     */
+    public Shape getShape() {
+        return myShape;
+    }
+}

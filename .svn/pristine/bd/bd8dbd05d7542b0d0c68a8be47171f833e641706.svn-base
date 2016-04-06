@@ -1,0 +1,87 @@
+/*
+ * TCSS 305
+ * Assignment 5 ¨C PowerPaint
+ */
+
+package actions;
+
+import gui.PowerPaintCanvas;
+
+import java.awt.Shape;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JMenuBar;
+
+import tools.Tool;
+
+/**
+ * This is a listener for PowerPaintCanvas.
+ * 
+ * @author Qing Bai
+ * @version 15 February 2015
+ */
+public class CanvasListener extends MouseAdapter {
+    
+    /**
+     * This is the canvas.
+     */
+    private final PowerPaintCanvas myCanvas;
+    
+    /**
+     * This is the tool used to draw on canvas.
+     */
+    private Tool myTool;
+    
+    /**
+     * This is the menu bar that is enabled when drawing starts.
+     */
+    private final JMenuBar myMenuBar;
+    
+    /**
+     * This is the constructor for this listener class.
+     * 
+     * @param theCanvas is the canvas where this listener functions
+     * @param theMenuBar is the menu bar used to locate the Undo changes menu item
+     */
+    public CanvasListener(final PowerPaintCanvas theCanvas, final JMenuBar theMenuBar) {
+        super();
+        myCanvas = theCanvas;
+        myMenuBar = theMenuBar;
+        myTool = theCanvas.getCurrentTool();
+    }
+    
+    /**
+     * This starts a drawing when mouse is pressed.
+     * 
+     * @param theEvent is the mouse event used here to obtain x and y coordinates
+     */
+    public void mousePressed(final MouseEvent theEvent) {
+        // always check what the current tool is before drawing
+        myTool = myCanvas.getCurrentTool();
+        myTool.start(theEvent.getX(), theEvent.getY());
+    }
+    
+    /**
+     * This ends a drawing when mouse is released.
+     * 
+     * @param theEvent is the mouse event used here to obtain x and y coordinates
+     */
+    public void mouseReleased(final MouseEvent theEvent) {
+        final Shape shape = myTool.end(theEvent.getX(), theEvent.getY());
+        myCanvas.addToOldDrawing(shape);
+        // This enables the Undo changes menu item once there is at least one drawing
+        myMenuBar.getMenu(0).getItem(0).setEnabled(true);
+    }
+    
+    /**
+     * This allows to draw a shape once mouse is dragged.
+     * 
+     * @param theEvent is the mouse event used here to obtain x and y coordinates
+     */
+    public void mouseDragged(final MouseEvent theEvent) {
+        final Shape shape = myTool.drawing(theEvent.getX(), theEvent.getY());
+        myCanvas.setCurrentDrawing(shape);
+        myCanvas.repaint();
+    }
+}

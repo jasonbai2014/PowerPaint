@@ -1,0 +1,109 @@
+/*
+ * TCSS 305
+ * Assignment 5 ¨C PowerPaint
+ */
+
+package actions;
+
+import gui.PowerPaintCanvas;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JMenuBar;
+import javax.swing.JPanel;
+
+/**
+ * This action class for the rectangle tool.
+ * 
+ * @author Qing Bai
+ * @version 8 February 2015
+ */
+public class RectAction extends AbstractAction {
+    
+//    /**
+//     * This is the canvas.
+//     */
+//    private final JPanel myCanvas;
+//    
+//    /**
+//     * This is the menu bar.
+//     */
+//    private final JMenuBar myMenuBar;
+//    
+//    /**
+//     * This is a rectangle.
+//     */
+//    private final Rectangle2D myRectangle;
+//    
+//    /**
+//     * This is x coordinate of the start point.
+//     */
+//    private int myStartX;
+//    
+//    /**
+//     * This is y coordinate of the start point.
+//     */
+//    private int myStartY;
+    
+    /**
+     * This is a constructor used to create an action that can perform actions on a given 
+     * JPanel which acts as a canvas.
+     * 
+     * @param theCanvas is the given JPenel object which acts as a canvas
+     * @param theMenuBar is the menu bar in this program
+     */
+    public RectAction() {
+        super("Rectangle", new ImageIcon("images/rectangle_bw.gif"));
+        putValue(Action.MNEMONIC_KEY, KeyEvent.VK_R);
+        putValue(Action.SELECTED_KEY, true);
+//        myCanvas = theCanvas;
+//        myMenuBar = theMenuBar;
+//        myStartX = 0;
+//        myStartY = 0;
+//        myRectangle = new Rectangle2D.Double();
+    }
+
+    /**
+     * This method allows clients to draw rectangles.
+     * 
+     * @param theEvent is the event
+     */
+    public void actionPerformed(final ActionEvent theEvent) {
+        
+//        myCanvas.addMouseListener(new MouseAdapter() {
+//            public void mousePressed(final MouseEvent theEvent) {
+//                myStartX = theEvent.getX();
+//                myStartY = theEvent.getY();
+//                myRectangle.setRect(myStartX, myStartY, 0, 0);
+//            }
+//            
+//            public void mouseReleased(final MouseEvent theEvent) {
+//                final Rectangle2D rectCopy = (Rectangle2D.Double) myRectangle.clone();
+//                ((PowerPaintCanvas) myCanvas).addCurrentDrawing(rectCopy);
+//                myMenuBar.getMenu(0).getItem(0).setEnabled(true);
+//            }
+//        });
+//        
+//        myCanvas.addMouseMotionListener(new MouseAdapter() {
+//            public void mouseDragged(final MouseEvent theEvent) {
+//                final int topLeftX = Math.min(myStartX, (int) theEvent.getX());
+//                final int topLeftY = Math.min(myStartY, (int) theEvent.getY());
+//                final int bottomRightX = Math.max(myStartX, (int) theEvent.getX());
+//                final int bottomRightY = Math.max(myStartY, (int) theEvent.getY());
+//                
+//                myRectangle.setRect(topLeftX, topLeftY, bottomRightX - topLeftX, 
+//                    bottomRightY - topLeftY);
+//                ((PowerPaintCanvas) myCanvas).setCurrentDrawing(myRectangle);
+//                myCanvas.repaint();
+//            }
+//        });
+    }
+
+}

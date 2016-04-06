@@ -1,0 +1,146 @@
+/*
+ * TCSS 305
+ * Assignment 5 ¨C PowerPaint
+ */
+
+package gui;
+
+import actions.ColorAction;
+import actions.ToolAction;
+
+import java.awt.BorderLayout;
+import java.awt.Shape;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+
+
+import javax.swing.JMenuItem;
+
+import tools.EllipseTool;
+import tools.LineTool;
+import tools.PencilTool;
+import tools.RectangleTool;
+import tools.Tool;
+
+/**
+ * This is a class used to create a graphic user interface for this program.
+ * 
+ * @author Qing Bai
+ * @version 21 February 2015
+ */
+@SuppressWarnings("serial")
+public final class PowerPaintGUI extends JFrame {
+    
+    /**
+     * This is the menu bar of this program.
+     */
+    private final JMenuBar myMenuBar;
+    
+    /**
+     * This is the canvas of this program.
+     */
+    private final PowerPaintCanvas myCanvas;
+
+    /**
+     * This is a constructor of this class.
+     */
+    public PowerPaintGUI() {
+        super("TCSS 305 PowerPaint");
+        setIconImage(new ImageIcon("images/w.gif").getImage());
+        myMenuBar = new JMenuBar();
+        myCanvas = new PowerPaintCanvas();
+    }
+    
+    /**
+     * This sets up all components shown on this graphic user interface.
+     */
+    public void start() { 
+        final List<Action> toolActions = new LinkedList<Action>();
+        toolActions.add(new ToolAction(myCanvas, new PencilTool()));
+        toolActions.add(new ToolAction(myCanvas, new LineTool()));
+        toolActions.add(new ToolAction(myCanvas, new RectangleTool()));
+        toolActions.add(new ToolAction(myCanvas, new EllipseTool()));
+        
+        setJMenuBar(myMenuBar);
+        myMenuBar.add(new PowerPaintFile(myCanvas, this));
+        myMenuBar.add(new PowerPaintOption(myCanvas));
+        myMenuBar.add(new PowerPaintToolMenu(toolActions));
+        myMenuBar.add(new PowerPaintHelp());
+        myMenuBar.add(new JMenuItem(new ColorAction(myCanvas)));
+        
+        final CanvasListener listener = new CanvasListener();
+        myCanvas.addMouseListener(listener);
+        myCanvas.addMouseMotionListener(listener);
+        
+        add(myCanvas, BorderLayout.CENTER);
+        add(new PowerPaintToolBar(toolActions), BorderLayout.SOUTH);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        pack();
+        setVisible(true);
+    }
+    
+    /**
+     * This is an inner class for the listener of the canvas.
+     */
+    private class CanvasListener extends MouseAdapter {
+        /**
+         * This is the tool used to draw on canvas.
+         */
+        private Tool myTool;
+        
+        /**
+         * This is the constructor of this inner class.
+         */
+        public CanvasListener() {
+            super();
+            myTool = myCanvas.getCurrentTool();
+        }
+        
+        /**
+         * This starts a drawing when mouse is pressed.
+         * 
+         * @param theEvent is the mouse event used here to obtain x and y coordinates
+         */
+        public void mousePressed(final MouseEvent theEvent) {
+            // always check what the current tool is before drawing
+            myTool = myCanvas.getCurrentTool();
+            myTool.start(theEvent.getX(), theEvent.getY());
+        }
+        
+        /**
+         * This ends a drawing when mouse is released.
+         * 
+         * @param theEvent is the mouse event used here to obtain x and y coordinates
+         */
+        public void mouseReleased(final MouseEvent theEvent) {
+            final Shape shape = myTool.end(theEvent.getX(), theEvent.getY());
+            myCanvas.addToOldDrawing(shape);
+            repaint();
+            final boolean canUndo = myCanvas.isUndoable();
+            // enable the two undo menu items when there is at least one drawing 
+            // that they can undo
+            myMenuBar.getMenu(0).getItem(0).setEnabled(canUndo);
+            myMenuBar.getMenu(0).getItem(1).setEnabled(canUndo);
+        } 
+        
+        /**
+         * This allows to draw a shape once mouse is dragged.
+         * 
+         * @param theEvent is the mouse event used here to obtain x and y coordinates
+         */
+        public void mouseDragged(final MouseEvent theEvent) {
+            final Shape shape = myTool.drawing(theEvent.getX(), theEvent.getY());
+            myCanvas.setCurrentDrawing(shape);
+            myCanvas.repaint();
+        }
+    }
+
+}

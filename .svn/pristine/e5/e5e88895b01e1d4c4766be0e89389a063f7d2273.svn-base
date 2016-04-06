@@ -1,0 +1,75 @@
+/*
+ * TCSS 305
+ * Assignment 5 ¨C PowerPaint
+ */
+
+package drawing;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+
+import javax.swing.Icon;
+
+/**
+ * This is a class used to create a small icon.
+ * 
+ * @author Qing Bai
+ * @version 15 February 2015
+ */
+public class ColorIcon implements Icon {
+    
+    /**
+     * This is a default width of this icon.
+     */
+    public static final int WIDTH = 12;
+    
+    /**
+     * This is a default height of this icon.
+     */
+    public static final int HEIGHT = 12;
+    
+    /**
+     * This is the color of this icon.
+     */
+    private final Color myColor;
+    
+    /**
+     * This constructor creates a small icon with the given color.
+     * 
+     * @param theColor is a given color for the icon
+     */
+    public ColorIcon(final Color theColor) {
+        myColor = theColor;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void paintIcon(final Component theC, final Graphics theG, final int theX, 
+                          final int theY) {
+        theG.setColor(myColor);
+        theG.fillRect(theX, theY, WIDTH - 1, HEIGHT - 1);
+        
+        theG.setColor(Color.BLACK);
+        theG.drawRect(theX, theY, WIDTH - 1, HEIGHT - 1);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getIconWidth() {
+        return WIDTH;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getIconHeight() {
+        return HEIGHT;
+    }
+
+}

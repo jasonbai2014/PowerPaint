@@ -1,0 +1,206 @@
+/*
+ * TCSS 305
+ * Assignment 5 ¨C PowerPaint
+ */
+
+package gui;
+
+import drawing.CanvasDrawing;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.Line2D;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.swing.JPanel;
+
+/**
+ * This class is used as canvas in this program.
+ * 
+ * @author Qing Bai
+ * @version 8 February 2015
+ */
+public class PowerPaintCanvas extends JPanel {
+    
+    /**
+     * This is a default background color of this canvas.
+     */
+    private static final Color BACKGROUND_COLOR = Color.WHITE;
+    
+    /**
+     * This is a preferred size of this canvas.
+     */
+    private static final Dimension PREFERRED_SIZE = new Dimension(400, 200);
+    
+    /**
+     * This is grid spacing used for grids on this canvas.
+     */
+    private static final int GRID_SPACING = 10;
+    
+    /**
+     * This shows whether or not this canvas has grids. If true, the canvas has grids.
+     * Otherwise, it doesn't have grids.
+     */
+    private boolean myGridsVisible;
+    
+    /**
+     * This is a line width used for current drawing.
+     */
+    private int myCurrentLineWidth;
+    
+    /**
+     * This is a color used for current drawing.
+     */
+    private Color myCurrentColor;
+    
+    /**
+     * This is used to indicate whether or not there is a current drawing ready for use.
+     */
+    private boolean myCurrentDrawingAvailable;
+    
+    /**
+     * This is a current drawing.
+     */
+    private Shape myCurrentDrawing;
+    
+    /**
+     * This contains all shapes that have been drawn on this canvas.
+     */
+    private final List<CanvasDrawing> myDrawings;
+
+    /**
+     * This is a constructor of this class.
+     */
+    public PowerPaintCanvas() {
+        super();
+        setBackground(BACKGROUND_COLOR);
+        setPreferredSize(PREFERRED_SIZE);
+        myDrawings = new LinkedList<CanvasDrawing>();
+        myGridsVisible = false;
+        myCurrentDrawingAvailable = false;
+        myCurrentLineWidth = 1;
+        myCurrentColor = Color.BLACK;
+    }
+    
+    /**
+     * This method paints shapes.
+     * 
+     * @param theGraphics is the graphics object to use for painting.
+     */
+    @Override
+    public void paintComponent(final Graphics theGraphics) {
+        super.paintComponent(theGraphics);
+        final Graphics2D pen2D = (Graphics2D) theGraphics;
+        
+        if (myGridsVisible) {
+            drawGrids(pen2D);
+        }
+        
+        if (myCurrentDrawingAvailable && myCurrentLineWidth != 0) {
+            pen2D.setPaint(myCurrentColor);
+            pen2D.setStroke(new BasicStroke(myCurrentLineWidth));
+            pen2D.draw(myCurrentDrawing);
+        }
+        
+        if (!myDrawings.isEmpty()) {
+            final Iterator<CanvasDrawing> drawings = myDrawings.iterator();
+            while (drawings.hasNext()) {
+                final CanvasDrawing drawing = drawings.next();
+                pen2D.setPaint(drawing.getColor());
+                pen2D.setStroke(new BasicStroke(drawing.getLineWidth()));
+                pen2D.draw(drawing.getShape());
+            }
+        }
+    }
+    
+    /**
+     * This method draws grids on this canvas.
+     * 
+     * @param theGraphics is the graphics object to use for painting.
+     */
+    private void drawGrids(final Graphics2D theGraphics) {
+        final Line2D line = new Line2D.Double();
+        final int height = getHeight();
+        final int width = getWidth();
+        // draw horizontal lines
+        for (int i = GRID_SPACING; i < height; i += GRID_SPACING) {
+            line.setLine(0, i, width, i);
+            theGraphics.draw(line);
+        }
+        // draw vertical lines
+        for (int i = GRID_SPACING; i < width; i += GRID_SPACING) {
+            line.setLine(i, 0, i, height);
+            theGraphics.draw(line);
+        }  
+    }
+    
+    /**
+     * This method adds the newest drawing on this canvas.
+     * 
+     * @param theCurrentShape is the newest shape drawn on this canvas
+     */
+    public void addCurrentDrawing(final Shape theCurrentShape) {
+        if (theCurrentShape != null && myCurrentLineWidth != 0) {
+            myDrawings.add(new CanvasDrawing(theCurrentShape, myCurrentColor, 
+                myCurrentLineWidth));
+        }
+    }
+    
+    /**
+     * This method removes all drawings on this canvas.
+     */
+    public void clearCanvas() {
+        myDrawings.clear();
+        myCurrentDrawingAvailable = false;
+    }
+    
+    /**
+     * This one sets whether or not this canvas has grids. If true is passed in, this canvas
+     * has grids. Otherwise, the canvas doesn't have grids.
+     * 
+     * @param theGridsVisible is a boolean value to determine if this canvas has grids or not
+     */
+    public void setGridsVisible(final boolean theGridsVisible) {
+        myGridsVisible = theGridsVisible;
+    }
+    
+    /**
+     * This sets a current color used to draw on this canvas.
+     * 
+     * @param theColor is a given color for current drawing
+     */
+    public void setCurrentColor(final Color theColor) {
+        // if no valid color is passed in, this canvas still uses the default color (black)
+        if (theColor != null) {
+            myCurrentColor = theColor;
+        }
+    }
+    
+    /**
+     * This sets a current line width used to draw on this canvas.
+     * 
+     * @param theCurrentLineWidth is a given line width for current drawing
+     */
+    public void setCurrentLineWidth(final int theCurrentLineWidth) {
+        if (theCurrentLineWidth >= 0) {
+            myCurrentLineWidth = theCurrentLineWidth;
+        }
+    }
+    
+    /**
+     * This sets a current drawing on this canvas.
+     * 
+     * @param theCurrentDrawing is current drawing
+     */
+    public void setCurrentDrawing(final Shape theCurrentDrawing) {
+        if (theCurrentDrawing != null) {
+            myCurrentDrawing = theCurrentDrawing;
+            myCurrentDrawingAvailable = true;
+        }
+    }
+}

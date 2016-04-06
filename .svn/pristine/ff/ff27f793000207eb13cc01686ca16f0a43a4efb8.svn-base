@@ -1,0 +1,24 @@
+/*
+ * TCSS 305
+ * Assignment 5 ¨C PowerPaint
+ */
+
+package tools;
+
+import java.awt.geom.Ellipse2D;
+
+/**
+ * This is a class for ellipse tool in this program.
+ * 
+ * @author Qing Bai
+ * @version 15 February 2015
+ */
+public class EllipseTool extends RectEllipseTool {
+
+    /**
+     * This is a constructor of this class.
+     */
+    public EllipseTool() {
+        super(new Ellipse2D.Double());
+    }
+}

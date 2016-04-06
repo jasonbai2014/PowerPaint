@@ -1,0 +1,54 @@
+/*
+ * TCSS 305
+ * Assignment 5 ¨C PowerPaint
+ */
+
+package actions;
+
+import gui.PowerPaintCanvas;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
+
+/**
+ * This action class for the pencil tool.
+ * 
+ * @author Qing Bai
+ * @version 8 February 2015
+ */
+public class PencilAction extends AbstractAction {
+    
+    /**
+     * This is the key for a Jpanel object which serves as canvas.
+     */
+    public static final String CANVAS = "canvas";
+    
+    /**
+     * This is a constructor used to create an action that can perform actions on a given 
+     * JPanel which acts as a canvas.
+     * 
+     * @param theCanvas is the given JPenel object which acts as a canvas
+     */
+    public PencilAction(final JPanel theCanvas) {
+        super();
+        putValue(Action.NAME, "Pencil");
+        putValue(Action.SMALL_ICON, new ImageIcon("images/pencil_bw.gif"));
+        putValue(Action.MNEMONIC_KEY, KeyEvent.VK_P);
+        putValue(CANVAS, theCanvas);
+    }
+    
+    /**
+     * This method allows clients to draw an arbitrary geometric path.
+     * 
+     * @param theEvent is the event
+     */
+    public void actionPerformed(final ActionEvent theEvent) {
+        final PowerPaintCanvas canvas = (PowerPaintCanvas) getValue(CANVAS);
+    }
+
+}

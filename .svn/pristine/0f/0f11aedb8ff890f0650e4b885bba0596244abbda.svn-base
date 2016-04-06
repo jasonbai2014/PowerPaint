@@ -1,0 +1,90 @@
+/*
+ * TCSS 305
+ * Assignment 5 ¨C PowerPaint
+ */
+
+package actions;
+
+
+import gui.PowerPaintCanvas;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Path2D;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JMenuBar;
+import javax.swing.JPanel;
+
+/**
+ * This action class for the pencil tool.
+ * 
+ * @author Qing Bai
+ * @version 8 February 2015
+ */
+public class PencilAction extends AbstractAction {
+    
+//    /**
+//     * This is the canvas.
+//     */
+//    private final JPanel myCanvas;
+//    
+//    /**
+//     * This is the menu bar.
+//     */
+//    private final JMenuBar myMenuBar;
+//    
+//    /**
+//     * This is a line.
+//     */
+//    private final Path2D myPath;
+    
+    /**
+     * This is a constructor used to create an action that can perform actions on a given 
+     * JPanel which acts as a canvas.
+     * 
+     * @param theCanvas is the given JPenel object which acts as a canvas
+     * @param theMenuBar is the menu bar in this program
+     */
+    public PencilAction() {
+        super("Pencil", new ImageIcon("images/pencil_bw.gif"));
+        putValue(Action.MNEMONIC_KEY, KeyEvent.VK_P);
+        putValue(Action.SELECTED_KEY, true);
+//        myCanvas = theCanvas;
+//        myMenuBar = theMenuBar;
+//        myPath = new Path2D.Double();
+    }
+    
+    /**
+     * This method allows clients to draw an arbitrary geometric path.
+     * 
+     * @param theEvent is the event
+     */
+    public void actionPerformed(final ActionEvent theEvent) {
+//        myCanvas.addMouseListener(new MouseAdapter() {
+//            public void mousePressed(final MouseEvent theEvent) {
+//                myPath.moveTo(theEvent.getX(), theEvent.getY());
+//            }
+//            
+//            public void mouseReleased(final MouseEvent theEvent) {
+//                final Path2D pathCopy = (Path2D.Double) myPath.clone();
+//                ((PowerPaintCanvas) myCanvas).addCurrentDrawing(pathCopy);
+//                myPath.reset();
+//                myMenuBar.getMenu(0).getItem(0).setEnabled(true);
+//            }
+//        });
+//        
+//        myCanvas.addMouseMotionListener(new MouseAdapter() {
+//            public void mouseDragged(final MouseEvent theEvent) {
+//                myPath.lineTo(theEvent.getX(), theEvent.getY());
+//                ((PowerPaintCanvas) myCanvas).setCurrentDrawing(myPath);
+//                myCanvas.repaint();
+//            }
+//        });
+    }
+
+}
